@@ -1,4 +1,3 @@
-import { SideNavItem } from "@/Type";
 import {
   IconHome,
   IconBriefcase,

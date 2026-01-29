@@ -2,7 +2,7 @@
 import axios from "axios";
 import "../globals.css";
 import { Toaster } from "react-hot-toast";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { AuthProvider, useAuth } from "../../context/AuthContext";
 import { useEffect } from "react";
 import SideNav from "./SideNav";
 

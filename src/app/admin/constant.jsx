@@ -18,11 +18,6 @@ export const SIDENAV_ITEMS = [
     icon: <IconBuilding size={28} />,
   },
   {
-    title: "Manage MCQ Questions",
-    path: "/admin/manage-questions",
-    icon: <IconWorldQuestion size={28} />,
-  },
-  {
     title: "Job Overview",
     path: "/admin/jobs",
     icon: <IconBriefcase size={28} />,

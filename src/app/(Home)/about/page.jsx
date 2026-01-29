@@ -1,5 +1,5 @@
 "use client";
-import GlassCard from "@/components/GlassCard";
+import GlassCard from "../../../components/GlassCard";
 import { IconEye, IconHeart, IconTarget, IconUsers } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 

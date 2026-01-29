@@ -2,10 +2,9 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useAuth } from "../../../context/AuthContext";
-import PageTitle from "../../../components/PageTitle";
-import Loading from "../../../components/Loading";
-import { DEGREES, JOB_POSITIONS, SKILLS } from "../../../helper/Constants";
+import { useAuth } from "../../../../context/AuthContext";
+import PageTitle from "../../../../components/PageTitle";
+import Loading from "../../../../components/Loading";
 import {
   IconBriefcase,
   IconClipboardText,
@@ -15,6 +14,7 @@ import {
   IconInfoCircle,
 } from "@tabler/icons-react";
 import Markdown from "react-markdown";
+import { JOB_POSITIONS, DEGREES, SKILLS } from "../../../../helper/Constants";
 
 export default function JobPost() {
   const { user } = useAuth();

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { IconMail, IconMapPin, IconPhone, IconSend } from "@tabler/icons-react";
-import GlassCard from "@/components/GlassCard";
+import GlassCard from "../../../components/GlassCard";
 
 export default function Contact() {
   const [formData, setFormData] = useState({

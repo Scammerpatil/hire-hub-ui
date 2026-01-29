@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useAuth } from "../../../context/AuthContext";
-import Loading from "../../../components/Loading";
-import PageTitle from "../../../components/PageTitle";
-import { DEGREES, JOB_POSITIONS, SKILLS } from "../../../helper/Constants";
+import { useAuth } from "../../../../context/AuthContext";
+import PageTitle from "../../../../components/PageTitle";
+import Loading from "../../../../components/Loading";
+import { DEGREES, JOB_POSITIONS, SKILLS } from "../../../../helper/Constants";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   IconBriefcase,
@@ -15,7 +15,7 @@ import {
   IconDeviceFloppy,
   IconInfoCircle,
   IconEye,
-} from "../../..tabler/icons-react";
+} from "@tabler/icons-react";
 import Markdown from "react-markdown";
 
 export default function EditJob() {

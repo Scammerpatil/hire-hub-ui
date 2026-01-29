@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "jsx": "preserve",
+    "allowJs": true,
+    "outDir": "partial-js",
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "noEmitOnError": false
+  },
+  "include": ["src/app/candidate/**/*", "src/app/employee/**/*"]
+}
