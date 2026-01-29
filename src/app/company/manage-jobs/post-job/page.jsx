@@ -1,0 +1,481 @@
+"use client";
+import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useAuth } from "../../../context/AuthContext";
+import PageTitle from "../../../components/PageTitle";
+import Loading from "../../../components/Loading";
+import { DEGREES, JOB_POSITIONS, SKILLS } from "../../../helper/Constants";
+import {
+  IconBriefcase,
+  IconClipboardText,
+  IconTools,
+  IconCoin,
+  IconSend,
+  IconInfoCircle,
+} from "@tabler/icons-react";
+import Markdown from "react-markdown";
+
+export default function JobPost() {
+  const { user } = useAuth();
+  const [degreeSuggestions, setDegreeSuggestions] = useState([]);
+  const [skillSuggestions, setSkillSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isPreview, setIsPreview] = useState(false);
+
+  const [formData, setFormData] = useState({
+    companyId: "",
+    jobTitle: "",
+    jobPosition: "",
+    jobLocation: "",
+    jobCategory: "",
+    jobDescription: "",
+    requiredDegrees: "",
+    requiredExperience: 0,
+    requiredSkills: "",
+    minPackage: 0,
+    maxPackage: 0,
+    totalOpenings: 0,
+    status: "Active", // Defaulting to Active for better UX
+  });
+
+  const handleSubmit = async () => {
+    if (!formData.jobTitle || !formData.jobDescription) {
+      return toast.error("Please fill in the required fields.");
+    }
+
+    formData.companyId = user.userId;
+    setLoading(true);
+    try {
+      await axios.post(`/spring-server/api/company/post-job`, formData, {
+        withCredentials: true,
+      });
+      setFormData({
+        companyId: "",
+        jobTitle: "",
+        jobPosition: "",
+        jobLocation: "",
+        jobCategory: "",
+        jobDescription: "",
+        requiredDegrees: "",
+        requiredExperience: 0,
+        requiredSkills: "",
+        minPackage: 0,
+        maxPackage: 0,
+        totalOpenings: 0,
+        status: "Active",
+      });
+      toast.success("Job published successfully!");
+    } catch (err) {
+      toast.error("Failed to create job.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDegreeChange = (value) => {
+    setFormData({ ...formData, requiredDegrees: value });
+    const last = value.split(",").pop()?.trim().toLowerCase() || "";
+    if (!last) return setDegreeSuggestions([]);
+    const filtered = DEGREES.filter((d) => d.toLowerCase().includes(last));
+    setDegreeSuggestions(filtered);
+  };
+
+  const handleSkillChange = (value) => {
+    setFormData({ ...formData, requiredSkills: value });
+    const last = value.split(",").pop()?.trim().toLowerCase() || "";
+    if (!last) return setSkillSuggestions([]);
+    const filtered = SKILLS.filter((s) => s.toLowerCase().includes(last));
+    setSkillSuggestions(filtered);
+  };
+
+  const applyDegree = (degree) => {
+    const parts = formData.requiredDegrees.split(",");
+    parts[parts.length - 1] = " " + degree;
+    setFormData({
+      ...formData,
+      requiredDegrees: parts.join(", ").replace(/^,/, "").trim(),
+    });
+    setDegreeSuggestions([]);
+  };
+
+  const applySkill = (skill) => {
+    const parts = formData.requiredSkills.split(",");
+    parts[parts.length - 1] = " " + skill;
+    setFormData({
+      ...formData,
+      requiredSkills: parts.join(", ").replace(/^,/, "").trim(),
+    });
+    setSkillSuggestions([]);
+  };
+
+  if (loading) return <Loading />;
+
+  return (
+    <>
+      <PageTitle title="Create Opportunity" />
+      <div className="min-h-screen bg-base-200/50 pb-20">
+        <div className="bg-base-100 border-b border-base-content/5 py-8 mb-8">
+          <div className="container mx-auto px-6 lg:px-20 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+              <p className="opacity-60 text-sm">
+                Fill in the details to find your next great hire.
+              </p>
+            </div>
+            <div className="flex gap-2 bg-base-200 p-1 rounded-xl">
+              <button
+                onClick={() => setIsPreview(false)}
+                className={`btn btn-sm border-none ${
+                  !isPreview ? "btn-primary shadow-md" : "btn-ghost opacity-50"
+                }`}
+              >
+                Edit Details
+              </button>
+              <button
+                onClick={() => setIsPreview(true)}
+                className={`btn btn-sm border-none ${
+                  isPreview ? "btn-primary shadow-md" : "btn-ghost opacity-50"
+                }`}
+              >
+                Preview
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-6">
+          {!isPreview ? (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-6">
+                {/* SECTION 1: ROLE INFO */}
+                <div className="card bg-base-100 shadow-sm border border-base-content/5">
+                  <div className="card-body p-8">
+                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                      <IconBriefcase className="text-primary" size={20} />{" "}
+                      General Information
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="form-control md:col-span-2">
+                        <label className="label font-bold text-xs opacity-60">
+                          JOB TITLE *
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="e.g. Senior Frontend Engineer"
+                          className="input input-primary w-full focus:input-primary"
+                          value={formData.jobTitle}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              jobTitle: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="form-control">
+                        <label className="label font-bold text-xs opacity-60">
+                          POSITION *
+                        </label>
+                        <select
+                          className="select select-primary w-full focus:select-primary"
+                          value={formData.jobPosition}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              jobPosition: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="">Select Position</option>
+                          {JOB_POSITIONS.map((job) => (
+                            <option value={job} key={job}>
+                              {job}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="form-control">
+                        <label className="label font-bold text-xs opacity-60">
+                          LOCATION TYPE *
+                        </label>
+                        <select
+                          className="select select-primary w-full focus:select-primary"
+                          value={formData.jobLocation}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              jobLocation: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="">Select Location</option>
+                          <option value="Remote">Remote</option>
+                          <option value="On-site">On-site</option>
+                          <option value="Hybrid">Hybrid</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SECTION 2: REQUIREMENTS */}
+                <div className="card bg-base-100 shadow-sm border border-base-content/5">
+                  <div className="card-body p-8">
+                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                      <IconTools className="text-primary" size={20} /> Candidate
+                      Requirements
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="form-control relative">
+                        <label className="label font-bold text-xs opacity-60">
+                          REQUIRED DEGREES
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="B.Tech, M.S..."
+                          className="input input-primary w-full focus:input-primary"
+                          value={formData.requiredDegrees}
+                          onChange={(e) => handleDegreeChange(e.target.value)}
+                        />
+                        {degreeSuggestions.length > 0 && (
+                          <div className="absolute top-full left-0 w-full bg-base-100 border border-base-content/10 rounded-xl mt-1 z-30 shadow-2xl max-h-48 overflow-y-auto p-1">
+                            {degreeSuggestions.map((d) => (
+                              <div
+                                key={d}
+                                onClick={() => applyDegree(d)}
+                                className="px-4 py-2 hover:bg-primary hover:text-primary-content cursor-pointer rounded-lg text-sm transition-colors"
+                              >
+                                {d}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div className="form-control">
+                        <label className="label font-bold text-xs opacity-60">
+                          EXP. REQUIRED (YEARS)
+                        </label>
+                        <input
+                          type="number"
+                          className="input input-primary w-full focus:input-primary"
+                          value={formData.requiredExperience}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              requiredExperience: Number(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="form-control md:col-span-2 relative">
+                        <label className="label font-bold text-xs opacity-60">
+                          SKILLS (COMMA SEPARATED)
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="React, Tailwind, Node.js..."
+                          className="input input-primary w-full focus:input-primary"
+                          value={formData.requiredSkills}
+                          onChange={(e) => handleSkillChange(e.target.value)}
+                        />
+                        {skillSuggestions.length > 0 && (
+                          <div className="absolute top-full left-0 w-full bg-base-100 border border-base-content/10 rounded-xl mt-1 z-30 shadow-2xl max-h-48 overflow-y-auto p-1">
+                            {skillSuggestions.map((s) => (
+                              <div
+                                key={s}
+                                onClick={() => applySkill(s)}
+                                className="px-4 py-2 hover:bg-primary hover:text-primary-content cursor-pointer rounded-lg text-sm transition-colors"
+                              >
+                                {s}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SECTION 3: DESCRIPTION */}
+                <div className="card bg-base-100 shadow-sm border border-base-content/5">
+                  <div className="card-body p-8">
+                    <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                      <IconClipboardText className="text-primary" size={20} />{" "}
+                      Job Description
+                    </h3>
+                    <textarea
+                      placeholder="Describe the role, responsibilities, and culture... (Markdown is your friend!)"
+                      className="textarea textarea-primary w-full focus:textarea-primary min-h-[300px] text-base leading-relaxed"
+                      value={formData.jobDescription}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          jobDescription: e.target.value,
+                        })
+                      }
+                    />
+                    <div className="flex items-center gap-2 mt-2 opacity-50 text-xs">
+                      <IconInfoCircle size={14} /> Markdown supported: **bold**,
+                      *italic*, # headings
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* SIDEBAR: SCALE & SUBMIT */}
+              <div className="space-y-6">
+                <div className="card bg-base-100 shadow-sm border border-base-content/5">
+                  <div className="card-body p-6">
+                    <h3 className="text-sm font-black uppercase tracking-widest opacity-40 mb-4 flex items-center gap-2">
+                      <IconCoin size={18} /> Scale & Pay
+                    </h3>
+                    <div className="space-y-4">
+                      <div className="form-control">
+                        <label className="label py-1 font-bold text-[10px] opacity-60">
+                          JOB CATEGORY
+                        </label>
+                        <select
+                          className="select select-sm select-primary w-full"
+                          value={formData.jobCategory}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              jobCategory: e.target.value,
+                            })
+                          }
+                        >
+                          <option value="">Select Type</option>
+                          <option value="Full-Time">Full-Time</option>
+                          <option value="Part-Time">Part-Time</option>
+                          <option value="Internship">Internship</option>
+                          <option value="Contract">Contract</option>
+                        </select>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="form-control">
+                          <label className="label py-1 font-bold text-[10px] opacity-60">
+                            MIN LPA
+                          </label>
+                          <input
+                            type="number"
+                            className="input input-sm input-primary w-full"
+                            value={formData.minPackage}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                minPackage: Number(e.target.value),
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="form-control">
+                          <label className="label py-1 font-bold text-[10px] opacity-60">
+                            MAX LPA
+                          </label>
+                          <input
+                            type="number"
+                            className="input input-sm input-primary w-full"
+                            value={formData.maxPackage}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                maxPackage: Number(e.target.value),
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="form-control">
+                        <label className="label py-1 font-bold text-[10px] opacity-60">
+                          TOTAL OPENINGS
+                        </label>
+                        <input
+                          type="number"
+                          className="input input-sm input-primary w-full"
+                          value={formData.totalOpenings}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              totalOpenings: Number(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className="divider opacity-50 my-6"></div>
+
+                    <button
+                      className="btn btn-primary btn-block shadow-lg shadow-primary/30 gap-2"
+                      onClick={handleSubmit}
+                    >
+                      Publish Job <IconSend size={18} />
+                    </button>
+                    <p className="text-[10px] text-center opacity-40 mt-4 leading-tight">
+                      By publishing, this job will be immediately visible to all
+                      eligible candidates.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* PREVIEW MODE */
+            <div className="max-w-4xl mx-auto card bg-base-100 shadow-2xl p-8 animate-in fade-in zoom-in duration-300">
+              <div className="flex justify-between items-start mb-8">
+                <div>
+                  <h1 className="text-4xl font-black">
+                    {formData.jobTitle || "Untitled Job"}
+                  </h1>
+                  <p className="text-primary font-bold text-lg mt-1">
+                    {user.fullName}
+                  </p>
+                </div>
+                <div className="badge badge-lg badge-primary">
+                  {formData.jobCategory || "Category"}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-6 border-y border-base-content/5 mb-8">
+                <div>
+                  <p className="text-xs opacity-50 font-bold uppercase">
+                    Location
+                  </p>
+                  <p className="font-semibold">
+                    {formData.jobLocation || "N/A"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs opacity-50 font-bold uppercase">
+                    Experience
+                  </p>
+                  <p className="font-semibold">
+                    {formData.requiredExperience} Years
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs opacity-50 font-bold uppercase">
+                    Package
+                  </p>
+                  <p className="font-semibold">
+                    {formData.minPackage}-{formData.maxPackage} LPA
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs opacity-50 font-bold uppercase">
+                    Openings
+                  </p>
+                  <p className="font-semibold">{formData.totalOpenings}</p>
+                </div>
+              </div>
+              <div className="prose prose-lg max-w-none">
+                <Markdown>
+                  {formData.jobDescription || "No description provided yet..."}
+                </Markdown>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}

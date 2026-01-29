@@ -1,0 +1,24 @@
+const nextConfig = {
+  /* config options here */
+  reactCompiler: true,
+  images: {
+    remotePatterns: [
+      { hostname: "img.freepik.com" },
+      { hostname: "cdn-icons-png.flaticon.com" },
+    ],
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/spring-server/:path*",
+        destination: "http://localhost:8080/:path*",
+      },
+      {
+        source: "/dotnet-server/:path*",
+        destination: "http://localhost:5000/:path*",
+      },
+    ];
+  },
+};
+
+export default nextConfig;
