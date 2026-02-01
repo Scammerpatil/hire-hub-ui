@@ -16,6 +16,8 @@ import {
   IconUsers,
   IconFilter,
   IconArrowRight,
+  IconBookmark,
+  IconBuildingSkyscraper,
 } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -64,208 +66,231 @@ export default function JobsListingPage() {
   });
 
   return (
-    <>
-      <PageTitle title="Discover Your Next Career" />
-      <div className="min-h-screen bg-base-100 pb-20 pt-16">
-        {/* SEARCH BAR SECTION */}
-        <div className="container mx-auto px-6 -mt-16">
-          <div className="card bg-base-100 shadow-2xl border border-base-content/5 p-4">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative grow">
-                <IconSearch
-                  className="absolute left-4 top-1/2 -translate-y-1/2 opacity-40"
-                  size={20}
-                />
-                <input
-                  type="text"
-                  placeholder="Job title, keywords..."
-                  className="input input-bordered input-primary w-full pl-12"
-                  value={searchParams.search}
-                  onChange={(e) =>
-                    setSearchParams({ ...searchParams, search: e.target.value })
-                  }
-                />
-              </div>
+    <main className="min-h-screen bg-base-200/50">
+      <PageTitle title="Career Marketplace" />
 
-              <div className="flex flex-wrap md:flex-nowrap gap-4 shrink-0">
-                <select
-                  className="select select-bordered select-primary min-w-40"
-                  value={searchParams.location}
-                  onChange={(e) =>
-                    setSearchParams({
-                      ...searchParams,
-                      location: e.target.value,
-                    })
-                  }
-                >
-                  <option value="">All Locations</option>
-                  {["Remote", "Onsite", "Hybrid"].map((loc) => (
-                    <option key={loc}>{loc}</option>
-                  ))}
-                </select>
-
-                <select
-                  className="select select-bordered select-primary min-w-40"
-                  value={searchParams.jobType}
-                  onChange={(e) =>
-                    setSearchParams({
-                      ...searchParams,
-                      jobType: e.target.value,
-                    })
-                  }
-                >
-                  <option value="">Job Category</option>
-                  {["Full-time", "Part-time", "Contract", "Internship"].map(
-                    (type) => (
-                      <option key={type}>{type}</option>
-                    ),
-                  )}
-                </select>
-
-                <button className="btn btn-primary px-8" onClick={fetchJobs}>
-                  Refresh
-                </button>
-              </div>
-            </div>
-          </div>
+      {/* HERO / SEARCH SECTION */}
+      <section className="bg-primary/5 border-b border-primary/10 pt-10 pb-20">
+        <div className="container mx-auto px-6 text-center mb-10">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
+            Find your <span className="text-primary italic">dream</span> role.
+          </h1>
+          <p className="opacity-60 max-w-xl mx-auto">
+            Discover opportunities from industry leaders and fast-growing
+            startups.
+          </p>
         </div>
 
-        {/* JOB LISTINGS */}
-        <div className="container mx-auto px-6 py-10">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold flex items-center gap-2">
-              <IconFilter size={20} className="text-primary" />
-              Showing {filteredJobs.length} Jobs
-            </h3>
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="flex flex-col lg:flex-row gap-2 bg-base-200 p-2 rounded-2xl shadow-2xl border border-base-content/10">
+            <div className="flex-1 relative">
+              <IconSearch
+                className="absolute left-4 top-1/2 -translate-y-1/2 opacity-30"
+                size={20}
+              />
+              <input
+                type="text"
+                placeholder="Search by job title or keywords..."
+                className="input input-primary w-full pl-12 focus:bg-transparent"
+                value={searchParams.search}
+                onChange={(e) =>
+                  setSearchParams({ ...searchParams, search: e.target.value })
+                }
+              />
+            </div>
+            <div className="divider lg:divider-horizontal m-0 opacity-10"></div>
+            <select
+              className="select select-ghost font-medium"
+              value={searchParams.location}
+              onChange={(e) =>
+                setSearchParams({ ...searchParams, location: e.target.value })
+              }
+            >
+              <option value="">Anywhere</option>
+              {["Remote", "Onsite", "Hybrid"].map((loc) => (
+                <option key={loc}>{loc}</option>
+              ))}
+            </select>
+            <button
+              className="btn btn-primary px-10 rounded-xl"
+              onClick={fetchJobs}
+            >
+              Search
+            </button>
           </div>
+        </div>
+      </section>
 
-          {filteredJobs.length > 0 ? (
-            <div className="grid gap-6">
-              <AnimatePresence>
-                {filteredJobs.map((job, idx) => (
+      {/* MAIN CONTENT */}
+      <div className="container mx-auto px-6 -mt-10 pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* SIDEBAR FILTERS */}
+          <aside className="lg:col-span-3 space-y-6">
+            <fieldset className="fieldset bg-base-200 p-6 rounded-3xl border border-base-content/5 shadow-sm sticky top-24">
+              <legend className="fieldset-legend flex items-center gap-2 text-primary font-bold">
+                <IconFilter size={18} /> Filters
+              </legend>
+
+              <div className="space-y-4 w-full">
+                <div>
+                  <label className="label-text text-xs uppercase font-bold opacity-50 block mb-2">
+                    Employment Type
+                  </label>
+                  <select
+                    className="select select-bordered w-full select-sm"
+                    value={searchParams.jobType}
+                    onChange={(e) =>
+                      setSearchParams({
+                        ...searchParams,
+                        jobType: e.target.value,
+                      })
+                    }
+                  >
+                    <option value="">All Types</option>
+                    {["Full-time", "Part-time", "Contract", "Internship"].map(
+                      (t) => (
+                        <option key={t}>{t}</option>
+                      ),
+                    )}
+                  </select>
+                </div>
+
+                <div className="divider opacity-50"></div>
+
+                <div className="text-sm opacity-60">
+                  <p>Don't see what you're looking for?</p>
+                  <button
+                    onClick={() =>
+                      setSearchParams({ search: "", location: "", jobType: "" })
+                    }
+                    className="link link-primary mt-1"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </aside>
+
+          {/* JOB FEED */}
+          <section className="lg:col-span-9 space-y-4">
+            <div className="flex justify-between items-center px-2">
+              <h3 className="font-semibold opacity-70">
+                {filteredJobs.length} opportunities found
+              </h3>
+            </div>
+
+            <AnimatePresence mode="popLayout">
+              {filteredJobs.length > 0 ? (
+                filteredJobs.map((job, idx) => (
                   <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    layout
+                    initial={{ opacity: 0, scale: 0.98 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ delay: idx * 0.05 }}
                     key={job.jobId}
-                    className="group card bg-base-200 border border-base-content/10 hover:border-primary/50 hover:shadow-xl transition-all duration-300"
+                    className="group relative bg-base-200 rounded-3xl p-1 border border-base-content/5 hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all"
                   >
-                    <div className="card-body p-6 md:p-8">
-                      <div className="flex flex-col md:flex-row justify-between gap-4">
-                        <div className="flex gap-5">
-                          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl uppercase border border-primary/20">
-                            {job.company?.user.fullName.substring(0, 2)}
-                          </div>
+                    <div className="p-6 md:p-8 flex flex-col md:flex-row gap-6">
+                      {/* Company Branding */}
+                      <div className="flex-shrink-0">
+                        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center text-primary border border-primary/10 group-hover:scale-105 transition-transform">
+                          <IconBuildingSkyscraper size={36} stroke={1.5} />
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-grow space-y-3">
+                        <div className="flex justify-between items-start">
                           <div>
-                            <h2 className="text-xl font-bold group-hover:text-primary transition-colors">
-                              {job.jobTitle}
-                            </h2>
+                            <div className="flex items-center gap-3 flex-wrap">
+                              <h2 className="text-2xl font-bold tracking-tight">
+                                {job.jobTitle}
+                              </h2>
+                              <span className="badge badge-primary badge-outline font-bold text-[10px] uppercase tracking-wider">
+                                {job.jobCategory}
+                              </span>
+                            </div>
                             <Link
                               href={`/candidate/company?companyId=${job.company?.companyId}`}
-                              className="text-primary font-medium hover:underline flex items-center gap-1 mt-1"
+                              className="text-lg opacity-60 hover:text-primary transition-colors flex items-center gap-1 mt-1 font-medium"
                             >
                               {job.company?.user.fullName}
                             </Link>
                           </div>
+                          <button className="btn btn-ghost btn-circle btn-sm">
+                            <IconBookmark
+                              size={20}
+                              className="opacity-40 hover:opacity-100"
+                            />
+                          </button>
                         </div>
 
-                        <div className="flex items-start md:items-end flex-col gap-2">
-                          <div className="badge badge-success badge-outline gap-1 p-3">
-                            <span className="w-2 h-2 rounded-full bg-success animate-pulse"></span>
-                            {job.status}
-                          </div>
-                          <p className="text-xs opacity-50 flex items-center gap-1">
-                            <IconCalendar size={14} /> Posted{" "}
+                        {/* Metadata Pills */}
+                        <div className="flex flex-wrap gap-4 text-sm font-medium">
+                          <span className="flex items-center gap-1.5 opacity-70 bg-base-200 px-3 py-1 rounded-full">
+                            <IconMapPin size={16} className="text-primary" />{" "}
+                            {job.jobLocation}
+                          </span>
+                          <span className="flex items-center gap-1.5 opacity-70 bg-base-200 px-3 py-1 rounded-full">
+                            <IconCurrencyRupee
+                              size={16}
+                              className="text-primary"
+                            />{" "}
+                            {job.minPackage}-{job.maxPackage} LPA
+                          </span>
+                          <span className="flex items-center gap-1.5 opacity-70 bg-base-200 px-3 py-1 rounded-full">
+                            <IconCalendar size={16} className="text-primary" />{" "}
                             {new Date(job.postedAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Metadata Grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 py-4 border-y border-base-content/5">
-                        <div className="flex items-center gap-2 text-sm opacity-70">
-                          <IconMapPin size={18} className="text-primary" />
-                          <span>{job.jobLocation}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm opacity-70">
-                          <IconBriefcase size={18} className="text-primary" />
-                          <span>{job.jobCategory}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm opacity-70">
-                          <IconCurrencyRupee
-                            size={18}
-                            className="text-primary"
-                          />
-                          <span>
-                            {job.minPackage} - {job.maxPackage} LPA
                           </span>
                         </div>
-                        <div className="flex items-center gap-2 text-sm opacity-70">
-                          <IconUsers size={18} className="text-primary" />
-                          <span>{job.totalOpenings} Openings</span>
-                        </div>
-                      </div>
 
-                      <div className="mt-4">
-                        <div className="text-sm opacity-70 line-clamp-2 prose prose-sm max-w-none">
+                        <div className="line-clamp-2 prose prose-sm opacity-50 pt-2">
                           <Markdown>{job.jobDescription}</Markdown>
                         </div>
-                      </div>
 
-                      <div className="card-actions justify-between items-center mt-6">
-                        <div className="flex flex-wrap gap-2">
-                          {job.requiredSkills
-                            ?.split(",")
-                            .slice(0, 3)
-                            .map((skill, index) => (
-                              <span
-                                key={index}
-                                className="badge badge-ghost text-xs"
-                              >
-                                {skill.trim()}
-                              </span>
-                            ))}
-                          {job.requiredSkills?.split(",").length > 3 && (
-                            <span className="text-xs opacity-50 self-center">
-                              +{job.requiredSkills.split(",").length - 3} more
-                            </span>
-                          )}
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-4 border-t border-base-content/5">
+                          <div className="flex gap-2">
+                            {job.requiredSkills
+                              ?.split(",")
+                              .slice(0, 4)
+                              .map((skill, i) => (
+                                <span
+                                  key={i}
+                                  className="text-[11px] font-bold uppercase tracking-widest opacity-40"
+                                >
+                                  {skill.trim()}
+                                </span>
+                              ))}
+                          </div>
+                          <Link
+                            href={`/candidate/jobs/view?jobId=${job.jobId}`}
+                            className="btn btn-primary rounded-xl px-8 hover:shadow-lg hover:shadow-primary/30 group/btn"
+                          >
+                            View Role
+                            <IconArrowRight
+                              size={18}
+                              className="group-hover/btn:translate-x-1 transition-transform"
+                            />
+                          </Link>
                         </div>
-
-                        <Link
-                          href={`/candidate/jobs/view?jobId=${job.jobId}`}
-                          className="btn btn-primary group-hover:gap-3 transition-all"
-                        >
-                          View Details <IconArrowRight size={18} />
-                        </Link>
                       </div>
                     </div>
                   </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <div className="text-center py-20 bg-base-200 rounded-3xl border-2 border-dashed border-base-content/10">
-              <div className="bg-primary/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <IconSearch size={40} className="text-primary" />
-              </div>
-              <h3 className="text-2xl font-bold">No results found</h3>
-              <p className="opacity-60 max-w-xs mx-auto mt-2">
-                Try adjusting your filters or search terms to find what you're
-                looking for.
-              </p>
-              <button
-                onClick={() =>
-                  setSearchParams({ search: "", location: "", jobType: "" })
-                }
-                className="btn btn-outline btn-sm mt-6"
-              >
-                Clear all filters
-              </button>
-            </div>
-          )}
+                ))
+              ) : (
+                <div className="text-center py-20 bg-base-200/50 rounded-box border-2 border-dashed border-base-content/10">
+                  <IconSearch size={48} className="mx-auto opacity-20 mb-4" />
+                  <p className="text-xl font-bold opacity-40">
+                    No matching careers found
+                  </p>
+                </div>
+              )}
+            </AnimatePresence>
+          </section>
         </div>
       </div>
-    </>
+    </main>
   );
 }

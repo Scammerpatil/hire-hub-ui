@@ -119,41 +119,33 @@ export default function ManageEmployees() {
     <>
       <PageTitle title="Team Management" />
       <div className="pb-10">
-        {/* SEARCH AND ACTION HEADER */}
-        <div className="px-10 mt-6">
-          <div className="bg-base-100 p-6 rounded-2xl border border-base-300 shadow-sm flex flex-col md:flex-row gap-4 items-end">
-            <div className="form-control w-full">
-              <label className="label font-bold text-xs uppercase tracking-widest opacity-60">
-                Filter Team Members
-              </label>
-              <div className="relative">
-                <IconSearch
-                  className="absolute left-3 top-1/2 -translate-y-1/2 opacity-40"
-                  size={20}
-                />
-                <input
-                  type="text"
-                  placeholder="Search by name..."
-                  className="input input-bordered pl-10 w-full focus:input-primary"
-                  value={employeeName}
-                  onChange={(e) => setEmployeeName(e.target.value)}
-                />
-              </div>
+        <div className="bg-base-200 p-6 rounded-2xl border border-base-300 shadow-sm flex flex-col md:flex-row gap-4 items-end mx-10 my-4">
+          <fieldset className="fieldset w-full">
+            <legend className="fieldset-legend uppercase tracking-widest opacity-60">
+              Filter Team Members
+            </legend>
+            <div className="input input-bordered w-full focus:input-primary">
+              <IconSearch className="opacity-40" size={20} />
+              <input
+                type="text"
+                placeholder="Search by name..."
+                className="grow"
+                value={employeeName}
+                onChange={(e) => setEmployeeName(e.target.value)}
+              />
             </div>
-            <button
-              className="btn btn-primary px-8 gap-2 w-full md:w-auto"
-              onClick={() =>
-                document.getElementById("add_employee").showModal()
-              }
-            >
-              <IconPlus size={20} /> Add Employee
-            </button>
-          </div>
+          </fieldset>
+          <button
+            className="btn btn-primary px-8 gap-2 w-full md:w-auto"
+            onClick={() => document.getElementById("add_employee").showModal()}
+          >
+            <IconPlus size={20} /> Add Employee
+          </button>
         </div>
 
         {/* TABLE SECTION */}
         <div className="mt-8 px-10">
-          <div className="overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-xl">
+          <div className="overflow-hidden rounded-2xl border border-base-300 bg-base-200 shadow-xl">
             <table className="table table-lg w-full">
               <thead className="bg-base-200/50">
                 <tr>
@@ -203,7 +195,7 @@ export default function ManageEmployees() {
                             <div className="font-bold text-lg">
                               {emp.user.fullName}
                             </div>
-                            <div className="text-xs badge badge-ghost font-medium">
+                            <div className="font-medium text-sm">
                               Internal Staff
                             </div>
                           </div>

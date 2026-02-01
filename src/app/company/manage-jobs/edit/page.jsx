@@ -124,7 +124,7 @@ export default function EditJob() {
       <PageTitle title={`Edit: ${formData.jobTitle}`} />
       <div className="min-h-screen bg-base-200/50 pb-20">
         {/* HEADER SECTION */}
-        <div className="bg-base-100 border-b border-base-content/5 py-8 mb-8">
+        <div className="bg-base-200 border-b border-base-content/5 py-8 mb-8">
           <div className="container mx-auto px-6">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div>
@@ -161,7 +161,7 @@ export default function EditJob() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-6">
                 {/* SECTION 1: ROLE INFO */}
-                <div className="card bg-base-100 shadow-sm border border-base-content/5">
+                <div className="card bg-base-200 shadow-sm border border-base-content/5">
                   <div className="card-body p-8">
                     <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                       <IconBriefcase className="text-primary" size={20} /> Role
@@ -229,7 +229,7 @@ export default function EditJob() {
                 </div>
 
                 {/* SECTION 2: REQUIREMENTS */}
-                <div className="card bg-base-100 shadow-sm border border-base-content/5">
+                <div className="card bg-base-200 shadow-sm border border-base-content/5">
                   <div className="card-body p-8">
                     <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                       <IconTools className="text-primary" size={20} /> Candidate
@@ -247,7 +247,7 @@ export default function EditJob() {
                           onChange={(e) => handleDegreeChange(e.target.value)}
                         />
                         {degreeSuggestions.length > 0 && (
-                          <div className="absolute top-full left-0 w-full bg-base-100 border border-base-content/10 rounded-xl mt-1 z-30 shadow-2xl max-h-48 overflow-y-auto p-1">
+                          <div className="absolute top-full left-0 w-full bg-base-200 border border-base-content/10 rounded-xl mt-1 z-30 shadow-2xl max-h-48 overflow-y-auto p-1">
                             {degreeSuggestions.map((d) => (
                               <div
                                 key={d}
@@ -287,7 +287,7 @@ export default function EditJob() {
                           onChange={(e) => handleSkillChange(e.target.value)}
                         />
                         {skillSuggestions.length > 0 && (
-                          <div className="absolute top-full left-0 w-full bg-base-100 border border-base-content/10 rounded-xl mt-1 z-30 shadow-2xl max-h-48 overflow-y-auto p-1">
+                          <div className="absolute top-full left-0 w-full bg-base-200 border border-base-content/10 rounded-xl mt-1 z-30 shadow-2xl max-h-48 overflow-y-auto p-1">
                             {skillSuggestions.map((s) => (
                               <div
                                 key={s}
@@ -305,7 +305,7 @@ export default function EditJob() {
                 </div>
 
                 {/* SECTION 3: DESCRIPTION */}
-                <div className="card bg-base-100 shadow-sm border border-base-content/5">
+                <div className="card bg-base-200 shadow-sm border border-base-content/5">
                   <div className="card-body p-8">
                     <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                       <IconClipboardText className="text-primary" size={20} />{" "}
@@ -331,7 +331,7 @@ export default function EditJob() {
 
               {/* SIDEBAR: SCALE, STATUS & SAVE */}
               <div className="space-y-6">
-                <div className="card bg-base-100 shadow-sm border border-base-content/5">
+                <div className="card bg-base-200 shadow-sm border border-base-content/5">
                   <div className="card-body p-6">
                     <h3 className="text-sm font-bold mb-4 flex items-center gap-2">
                       <IconCoin size={18} /> Scale & Pay
@@ -452,7 +452,7 @@ export default function EditJob() {
             </div>
           ) : (
             /* PREVIEW MODE */
-            <div className="max-w-4xl mx-auto card bg-base-100 shadow-2xl p-8 animate-in fade-in zoom-in duration-300 border border-base-content/5">
+            <div className="max-w-4xl mx-auto card bg-base-200 shadow-2xl p-8 animate-in fade-in zoom-in duration-300 border border-base-content/5">
               <div className="flex justify-between items-start mb-8">
                 <div>
                   <h1 className="text-4xl font-black">

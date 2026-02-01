@@ -35,7 +35,7 @@ export default function ApplicantsPage() {
         `/spring-server/api/application/employee/${user.userId}`,
       );
       const res1 = await axios.get(
-        `/spring-server/api/application/employee/refer/${user?.userId}`,
+        `/dotnet-server/api/application/employee/refer/${user?.userId}`,
       );
       setReferrals(res1.data);
       setApplicants(res.data);
@@ -61,7 +61,7 @@ export default function ApplicantsPage() {
   const handleRefer = async (candidateId, jobId) => {
     setLoading(true);
     try {
-      await axios.post(`/spring-server/api/application/employee/refer`, {
+      await axios.post(`/dotnet-server/api/application/employee/refer`, {
         employeeId: user?.userId,
         referredCandidateId: candidateId,
         jobId,
@@ -96,88 +96,77 @@ export default function ApplicantsPage() {
       <div className="min-h-screen bg-base-200/50 pb-20">
         <div className="container mx-auto px-6 pt-6">
           {/* FILTER BAR */}
-          <div className="card bg-base-100 shadow-sm border border-base-content/5 mb-8">
-            <div className="card-body p-6">
-              <div className="flex flex-col lg:flex-row gap-4 items-end">
-                <div className="form-control grow">
-                  <label className="label font-bold text-[10px] opacity-50 uppercase tracking-widest">
-                    Search Name
-                  </label>
-                  <div className="relative">
-                    <IconSearch
-                      className="absolute left-3 top-1/2 -translate-y-1/2"
-                      size={18}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Candidate name..."
-                      className="input input-primary w-full pl-10"
-                      value={searchParams.candidateName}
-                      onChange={(e) =>
-                        setSearchParams({
-                          ...searchParams,
-                          candidateName: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="form-control w-full lg:w-64">
-                  <label className="label font-bold text-[10px] opacity-50 uppercase tracking-widest">
-                    By Job Position
-                  </label>
-                  <select
-                    className="select select-primary w-full"
-                    value={searchParams.job}
-                    onChange={(e) =>
-                      setSearchParams({ ...searchParams, job: e.target.value })
-                    }
-                  >
-                    <option value="">All Positions</option>
-                    {jobs.map((job) => (
-                      <option value={job} key={job}>
-                        {job}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-control w-full lg:w-64">
-                  <label className="label font-bold text-[10px] opacity-50 uppercase tracking-widest">
-                    By Status
-                  </label>
-                  <select
-                    className="select select-primary w-full"
-                    value={searchParams.status}
+          <div className="card-body p-6 bg-base-200 rounded-3xl mb-6 border border-base-content/10">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 w-full">
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Search Name</legend>
+                <div className="input input-primary w-full">
+                  <IconSearch className="" size={18} />
+                  <input
+                    type="text"
+                    placeholder="Candidate name..."
+                    className="grow"
+                    value={searchParams.candidateName}
                     onChange={(e) =>
                       setSearchParams({
                         ...searchParams,
-                        status: e.target.value,
+                        candidateName: e.target.value,
                       })
                     }
-                  >
-                    <option value="">All Statuses</option>
-                    {[
-                      "Applied",
-                      "Shortlisted",
-                      "Contacted",
-                      "Interview Scheduled",
-                      "Rejected",
-                    ].map((s) => (
-                      <option value={s} key={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
+                  />
                 </div>
-              </div>
+              </fieldset>
+
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">By Job Position</legend>
+                <select
+                  className="select select-primary w-full"
+                  value={searchParams.job}
+                  onChange={(e) =>
+                    setSearchParams({ ...searchParams, job: e.target.value })
+                  }
+                >
+                  <option value="">All Positions</option>
+                  {jobs.map((job) => (
+                    <option value={job} key={job}>
+                      {job}
+                    </option>
+                  ))}
+                </select>
+              </fieldset>
+
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">By Status</legend>
+                <select
+                  className="select select-primary w-full"
+                  value={searchParams.status}
+                  onChange={(e) =>
+                    setSearchParams({
+                      ...searchParams,
+                      status: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">All Statuses</option>
+                  {[
+                    "Applied",
+                    "Shortlisted",
+                    "Contacted",
+                    "Interview Scheduled",
+                    "Rejected",
+                  ].map((s) => (
+                    <option value={s} key={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </fieldset>
             </div>
           </div>
 
           {/* APPLICANTS LIST */}
           {filteredApplicants.length === 0 ? (
-            <div className="text-center py-20 bg-base-100 rounded-3xl border-2 border-dashed border-base-content/10">
+            <div className="text-center py-20 bg-base-200 rounded-3xl border-2 border-dashed border-base-content/10">
               <IconFilter size={48} className="mx-auto opacity-20 mb-4" />
               <p className="text-xl font-bold opacity-40">
                 No applicants match your filters
@@ -188,7 +177,7 @@ export default function ApplicantsPage() {
               {filteredApplicants.map((app) => (
                 <div
                   key={app.applicationId}
-                  className="card bg-base-100 shadow-sm hover:shadow-md transition-all border border-base-content/5 group"
+                  className="card bg-base-200 shadow-sm hover:shadow-md transition-all border border-base-content/5 group"
                 >
                   <div className="card-body p-0">
                     <div className="flex flex-col md:flex-row">

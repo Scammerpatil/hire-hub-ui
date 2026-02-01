@@ -1,4 +1,7 @@
 "use client";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   BarChart,
   Bar,
@@ -6,142 +9,68 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
-import {
-  IconBriefcase2,
-  IconUserPlus,
-  IconListCheck,
-  IconClipboardCheck,
-} from "@tabler/icons-react";
+import { IconUserPlus } from "@tabler/icons-react";
 import { useAuth } from "../../../context/AuthContext";
 import PageTitle from "../../../components/PageTitle";
+import Loading from "../../../components/Loading";
 
 export default function EmployeeDashboard() {
   const { user } = useAuth();
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const stats = {
-    jobsApplied: 9,
-    referralsMade: 4,
-    shortlisted: 3,
-    testsTaken: 6,
-  };
+  useEffect(() => {
+    if (!user?.userId) return;
 
-  // Applications Over Months (Dummy Data)
-  const applicationsData = [
-    { month: "Jan", applications: 2 },
-    { month: "Feb", applications: 3 },
-    { month: "Mar", applications: 1 },
-    { month: "Apr", applications: 2 },
-    { month: "May", applications: 4 },
-  ];
+    axios
+      .get(`/spring-server/api/dashboard/employee/${user.userId}`)
+      .then((res) => {
+        setDashboard(res.data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [user]);
 
-  // Referral performance
-  const referralData = [
-    { name: "Accepted", value: 2 },
-    { name: "Rejected", value: 2 },
-  ];
+  if (loading) return <Loading />;
+  if (!dashboard) return <div className="p-10 text-error">Failed</div>;
 
-  const pieColors = ["var(--color-success)", "var(--color-error)"];
+  const { stats, referralsByMonth } = dashboard;
 
   return (
     <>
       <PageTitle title={`${user.fullName} Dashboard`} />
 
-      <div className="space-y-8 px-10">
-        {/* ====================== */}
-        {/* Stats Section */}
-        {/* ====================== */}
-        <div className="stats stats-vertical lg:stats-horizontal shadow-md bg-base-200 rounded-xl w-full">
+      <div className="space-y-8 px-10 mt-6">
+        {/* Stats */}
+        <div className="stats shadow-md bg-base-200 rounded-xl w-fit">
           <div className="stat">
             <div className="stat-figure text-primary">
-              <IconBriefcase2 size={48} />
-            </div>
-            <div className="stat-title">Jobs Applied</div>
-            <div className="stat-value text-primary">{stats.jobsApplied}</div>
-            <div className="stat-desc">Steady progress this month</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-figure text-secondary">
               <IconUserPlus size={48} />
             </div>
             <div className="stat-title">Referrals Made</div>
-            <div className="stat-value text-secondary">
-              {stats.referralsMade}
-            </div>
-            <div className="stat-desc">Great support to your team!</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-figure text-accent">
-              <IconListCheck size={48} />
-            </div>
-            <div className="stat-title">Shortlisted Applications</div>
-            <div className="stat-value text-accent">{stats.shortlisted}</div>
-            <div className="stat-desc">Better than last month</div>
-          </div>
-
-          <div className="stat">
-            <div className="stat-figure text-info">
-              <IconClipboardCheck size={48} />
-            </div>
-            <div className="stat-title">Tests Taken</div>
-            <div className="stat-value text-info">{stats.testsTaken}</div>
-            <div className="stat-desc">Keep it up!</div>
+            <div className="stat-value text-primary">{stats.referralsMade}</div>
           </div>
         </div>
 
-        {/* ====================== */}
-        {/* Charts Section */}
-        {/* ====================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Bar Chart */}
-          <div className="p-6 bg-base-200 rounded-xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4 text-center uppercase">
-              Applications Over Months
-            </h2>
+        {/* Chart */}
+        <div className="p-6 bg-base-200 rounded-xl shadow-md">
+          <h2 className="text-xl font-semibold mb-4 text-center uppercase">
+            Referrals Over Months
+          </h2>
 
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={applicationsData}>
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Bar
-                  dataKey="applications"
-                  fill="var(--color-primary)"
-                  radius={[6, 6, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Pie Chart */}
-          <div className="p-6 bg-base-200 rounded-xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4 text-center uppercase">
-              Referral Success Ratio
-            </h2>
-
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={referralData}
-                  dataKey="value"
-                  label
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                >
-                  {referralData.map((entry, index) => (
-                    <Cell key={index} fill={pieColors[index]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={referralsByMonth}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip />
+              <Bar
+                dataKey="count"
+                fill="var(--color-primary)"
+                radius={[6, 6, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </>

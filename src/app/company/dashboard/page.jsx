@@ -1,4 +1,7 @@
 "use client";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   BarChart,
   Bar,
@@ -13,27 +16,40 @@ import {
 import { IconBriefcase2, IconUsers } from "@tabler/icons-react";
 import PageTitle from "../../../components/PageTitle";
 import { useAuth } from "../../../context/AuthContext";
+import Loading from "../../../components/Loading";
 
 export default function CompanyDashboard() {
   const { user } = useAuth();
-  const stats = {
-    totalJobs: 12,
-    activeJobs: 7,
-    totalApplicants: 145,
-    shortlisted: 24,
-  };
+  const [loading, setLoading] = useState(true);
+  const [dashboard, setDashboard] = useState(null);
+  useEffect(() => {
+    if (!user?.userId) return;
 
-  const applicationsData = [
-    { month: "Jan", applicants: 20 },
-    { month: "Feb", applicants: 35 },
-    { month: "Mar", applicants: 15 },
-    { month: "Apr", applicants: 28 },
-    { month: "May", applicants: 47 },
-  ];
+    setLoading(true);
+
+    axios
+      .get(`/spring-server/api/dashboard/company/${user.userId}`)
+      .then((res) => {
+        setDashboard(res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load company dashboard", err);
+        setLoading(false);
+      });
+  }, [user?.userId]);
+
+  if (loading) return <Loading />;
+
+  if (!dashboard) {
+    return <div className="p-10 text-error">Failed to load dashboard</div>;
+  }
+
+  const { stats, applicationsByMonth, jobStatus } = dashboard;
 
   const jobStatusData = [
-    { name: "Active", value: 7 },
-    { name: "Closed", value: 5 },
+    { name: "Active", value: jobStatus.active },
+    { name: "Closed", value: jobStatus.closed },
   ];
 
   const pieColors = ["var(--color-success)", "var(--color-error)"];
@@ -41,6 +57,7 @@ export default function CompanyDashboard() {
   return (
     <>
       <PageTitle title={`${user.fullName} Dashboard`} />
+
       <div className="space-y-8 px-10 py-6">
         {/* Stats Section */}
         <div className="stats stats-vertical lg:stats-horizontal shadow-md bg-base-200 rounded-xl w-full">
@@ -50,7 +67,6 @@ export default function CompanyDashboard() {
             </div>
             <div className="stat-title">Total Jobs Posted</div>
             <div className="stat-value text-accent">{stats.totalJobs}</div>
-            <div className="stat-desc">12% more than last month</div>
           </div>
 
           <div className="stat">
@@ -59,7 +75,6 @@ export default function CompanyDashboard() {
             </div>
             <div className="stat-title">Active Jobs</div>
             <div className="stat-value text-info">{stats.activeJobs}</div>
-            <div className="stat-desc">5% more than last month</div>
           </div>
 
           <div className="stat">
@@ -70,7 +85,6 @@ export default function CompanyDashboard() {
             <div className="stat-value text-primary">
               {stats.totalApplicants}
             </div>
-            <div className="stat-desc">10% more than last month</div>
           </div>
 
           <div className="stat">
@@ -79,20 +93,19 @@ export default function CompanyDashboard() {
             </div>
             <div className="stat-title">Shortlisted Candidates</div>
             <div className="stat-value text-secondary">{stats.shortlisted}</div>
-            <div className="stat-desc">8% more than last month</div>
           </div>
         </div>
 
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Bar Chart: Applicants Over Time */}
+          {/* Bar Chart */}
           <div className="p-6 bg-base-200 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-4 text-center uppercase">
               Applicants Over Months
             </h2>
 
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={applicationsData}>
+              <BarChart data={applicationsByMonth}>
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
@@ -105,7 +118,7 @@ export default function CompanyDashboard() {
             </ResponsiveContainer>
           </div>
 
-          {/* Pie Chart: Active vs Closed Jobs */}
+          {/* Pie Chart */}
           <div className="p-6 bg-base-200 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-4 text-center uppercase">
               Job Status Overview
@@ -116,12 +129,12 @@ export default function CompanyDashboard() {
                 <Pie
                   data={jobStatusData}
                   dataKey="value"
-                  label
                   cx="50%"
                   cy="50%"
                   outerRadius={100}
+                  label
                 >
-                  {jobStatusData.map((entry, index) => (
+                  {jobStatusData.map((_, index) => (
                     <Cell key={index} fill={pieColors[index]} />
                   ))}
                 </Pie>

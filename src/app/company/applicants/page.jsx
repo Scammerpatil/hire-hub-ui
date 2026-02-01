@@ -49,7 +49,7 @@ export default function ApplicantsPage() {
   const handleStatusChange = async (applicationId, newStatus) => {
     try {
       await axios.put(
-        `/spring-server/api/application-status/update/${applicationId}`,
+        `/dotnet-server/api/application-status/update/${applicationId}`,
         null,
         { params: { newStatus: newStatus } },
       );
@@ -82,7 +82,7 @@ export default function ApplicantsPage() {
       <div className="min-h-screen bg-base-200/50 pb-20">
         <div className="container mx-auto px-6 pt-6">
           {/* FILTER BAR */}
-          <div className="card bg-base-100 shadow-sm border border-base-content/5 mb-8">
+          <div className="card bg-base-200 shadow-sm border border-base-content/5 mb-8">
             <div className="card-body p-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <fieldset className="fieldset">
@@ -160,7 +160,7 @@ export default function ApplicantsPage() {
 
           {/* APPLICANTS LIST */}
           {filteredApplicants.length === 0 ? (
-            <div className="text-center py-20 bg-base-100 rounded-3xl border-2 border-dashed border-base-content/10">
+            <div className="text-center py-20 bg-base-200 rounded-3xl border-2 border-dashed border-base-content/10">
               <IconFilter size={48} className="mx-auto opacity-20 mb-4" />
               <p className="text-xl font-bold opacity-40">
                 No applicants match your filters
@@ -171,7 +171,7 @@ export default function ApplicantsPage() {
               {filteredApplicants.map((app) => (
                 <div
                   key={app.applicationId}
-                  className="card card-side bg-base-100 border border-base-300 shadow-sm hover:border-primary/30 transition-all group overflow-hidden"
+                  className="card card-side bg-base-200 border border-base-300 shadow-sm hover:border-primary/30 transition-all group overflow-hidden"
                 >
                   {/* 1. Left Section: Profile & Info */}
                   <div className="flex flex-1 flex-col md:flex-row p-6 gap-6 items-center md:items-start">

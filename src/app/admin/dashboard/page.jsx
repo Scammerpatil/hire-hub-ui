@@ -1,4 +1,7 @@
 "use client";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
 import {
   BarChart,
   Bar,
@@ -12,26 +15,37 @@ import {
 } from "recharts";
 import { IconBriefcase2, IconBuilding, IconUsers } from "@tabler/icons-react";
 import PageTitle from "../../../components/PageTitle";
+import Loading from "../../../components/Loading";
 
 export default function AdminDashboard() {
-  const stats = {
-    totalCompanies: 42,
-    totalApplicants: 318,
-    totalJobs: 64,
-    totalActiveJobs: 32,
-  };
+  const [loading, setLoading] = useState(true);
+  const [dashboard, setDashboard] = useState(null);
 
-  const jobsData = [
-    { name: "Jan", jobs: 12 },
-    { name: "Feb", jobs: 19 },
-    { name: "Mar", jobs: 8 },
-    { name: "Apr", jobs: 15 },
-    { name: "May", jobs: 23 },
-  ];
+  useEffect(() => {
+    axios
+      .get("/spring-server/api/dashboard/admin")
+      .then((res) => {
+        setDashboard(res.data);
+        console.log("Admin dashboard data", res.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load admin dashboard", err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <Loading />;
+
+  if (!dashboard) {
+    return <div className="p-10 text-error">Failed to load dashboard</div>;
+  }
+
+  const { stats, jobsByMonth, jobDistribution } = dashboard;
 
   const pieData = [
-    { name: "Active", value: 32 },
-    { name: "Closed", value: 32 },
+    { name: "Active", value: jobDistribution.active },
+    { name: "Closed", value: jobDistribution.closed },
   ];
 
   const pieColors = ["var(--color-primary)", "var(--color-error)"];
@@ -39,7 +53,8 @@ export default function AdminDashboard() {
   return (
     <>
       <PageTitle title="Admin Dashboard" />
-      <div className="space-y-8 px-10">
+
+      <div className="space-y-8 px-10 mt-6">
         {/* Stats Section */}
         <div className="stats stats-vertical lg:stats-horizontal shadow-md bg-base-200 rounded-xl w-full">
           <div className="stat">
@@ -50,7 +65,6 @@ export default function AdminDashboard() {
             <div className="stat-value text-primary">
               {stats.totalCompanies}
             </div>
-            <div className="stat-desc">21% more than last month</div>
           </div>
 
           <div className="stat">
@@ -61,7 +75,6 @@ export default function AdminDashboard() {
             <div className="stat-value text-secondary">
               {stats.totalApplicants}
             </div>
-            <div className="stat-desc">8% more than last month</div>
           </div>
 
           <div className="stat">
@@ -70,7 +83,6 @@ export default function AdminDashboard() {
             </div>
             <div className="stat-title">Total Jobs Posted</div>
             <div className="stat-value text-accent">{stats.totalJobs}</div>
-            <div className="stat-desc">12% more than last month</div>
           </div>
 
           <div className="stat">
@@ -79,7 +91,6 @@ export default function AdminDashboard() {
             </div>
             <div className="stat-title">Active Jobs</div>
             <div className="stat-value text-info">{stats.totalActiveJobs}</div>
-            <div className="stat-desc">5% more than last month</div>
           </div>
         </div>
 
@@ -92,8 +103,8 @@ export default function AdminDashboard() {
             </h2>
 
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={jobsData}>
-                <XAxis dataKey="name" />
+              <BarChart data={jobsByMonth}>
+                <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
                 <Bar
@@ -121,7 +132,7 @@ export default function AdminDashboard() {
                   outerRadius={100}
                   label
                 >
-                  {pieData.map((entry, index) => (
+                  {pieData.map((_, index) => (
                     <Cell key={index} fill={pieColors[index]} />
                   ))}
                 </Pie>

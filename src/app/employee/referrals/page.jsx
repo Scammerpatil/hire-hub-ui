@@ -15,6 +15,7 @@ export default function ReferralsPage() {
 
   const fetchReferrals = async () => {
     if (!user?.userId) return;
+    console.log("Fetching referrals for user:", user);
 
     setLoading(true);
     try {

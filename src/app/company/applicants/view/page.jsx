@@ -62,7 +62,7 @@ export default function ViewCandidatePage() {
               animate={{ opacity: 1, x: 0 }}
               className="lg:col-span-1 space-y-6"
             >
-              <div className="card bg-base-100 shadow-sm border border-base-content/5 overflow-hidden">
+              <div className="card bg-base-200 shadow-sm border border-base-content/5 overflow-hidden">
                 <div className="h-24 bg-primary/10 w-full"></div>
                 <div className="px-6 pb-6 text-center">
                   <div className="avatar -mt-12 mb-4">
@@ -144,7 +144,7 @@ export default function ViewCandidatePage() {
               </div>
 
               {/* QUICK STATS CARD */}
-              <div className="card bg-base-100 shadow-sm border border-base-content/5 p-6">
+              <div className="card bg-base-200 shadow-sm border border-base-content/5 p-6">
                 <h3 className="font-black text-xs uppercase tracking-widest opacity-40 mb-4">
                   Job Preferences
                 </h3>
@@ -194,7 +194,7 @@ export default function ViewCandidatePage() {
               className="lg:col-span-2 space-y-6"
             >
               {/* SUMMARY */}
-              <div className="card bg-base-100 shadow-sm border border-base-content/5 p-8">
+              <div className="card bg-base-200 shadow-sm border border-base-content/5 p-8">
                 <h3 className="text-xl font-black mb-4 flex items-center gap-2 uppercase tracking-tight">
                   <IconBriefcase className="text-primary" /> About Candidate
                 </h3>
@@ -204,7 +204,7 @@ export default function ViewCandidatePage() {
               </div>
 
               {/* SKILLS */}
-              <div className="card bg-base-100 shadow-sm border border-base-content/5 p-8">
+              <div className="card bg-base-200 shadow-sm border border-base-content/5 p-8">
                 <h3 className="text-xl font-black mb-6 flex items-center gap-2 uppercase tracking-tight">
                   <IconRocket className="text-primary" /> Technical Skills
                 </h3>
@@ -222,7 +222,7 @@ export default function ViewCandidatePage() {
 
               {/* EXPERIENCE & EDUCATION TABS/LIST */}
               <div className="grid md:grid-cols-2 gap-6">
-                <div className="card bg-base-100 shadow-sm border border-base-content/5 p-8">
+                <div className="card bg-base-200 shadow-sm border border-base-content/5 p-8">
                   <h3 className="text-lg font-black mb-4 flex items-center gap-2 uppercase tracking-tight text-secondary">
                     <IconBriefcase size={20} /> Experience
                   </h3>
@@ -231,7 +231,7 @@ export default function ViewCandidatePage() {
                       "Experience details not specified."}
                   </p>
                 </div>
-                <div className="card bg-base-100 shadow-sm border border-base-content/5 p-8">
+                <div className="card bg-base-200 shadow-sm border border-base-content/5 p-8">
                   <h3 className="text-lg font-black mb-4 flex items-center gap-2 uppercase tracking-tight text-accent">
                     <IconSchool size={20} /> Education
                   </h3>
@@ -242,7 +242,7 @@ export default function ViewCandidatePage() {
               </div>
 
               {/* PROJECTS & CERTS */}
-              <div className="card bg-base-100 shadow-sm border border-base-content/5 p-8">
+              <div className="card bg-base-200 shadow-sm border border-base-content/5 p-8">
                 <div className="grid md:grid-cols-2 gap-8">
                   <div>
                     <h3 className="text-lg font-black mb-4 flex items-center gap-2 uppercase tracking-tight">
